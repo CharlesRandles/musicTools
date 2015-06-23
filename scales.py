@@ -1,4 +1,5 @@
 #!/usr/bin/python
+#!/usr/bin/python
 """
 Generate and manipulate musical scales
 """
@@ -22,6 +23,15 @@ def notes():
             10:["A#", "Bb"],
             11:["B", "Cb"]}
 
+def modes():
+    return { "Ionian": [2,2,1,2,2,2,1],
+             "Dorian": [2,1,2,2,2,1,2],
+             "Phrygian": [1,2,2,2,1,2,2],
+             "Lydian": [2,2,2,1,2,2,1],
+             "Mixolydian": [2,2,1,2,2,1,2],
+             "Aeolian": [2,1,2,2,1,2,2],
+             "Locrian": [1,2,2,1,2,2,2]}
+             
 def nextNoteName(note):
     return chr(((ord(note[0]) - ord("A") + 1)%7)+ord("A"))
 
@@ -58,11 +68,36 @@ def harmonicMinorScale(tonic):
     steps=[2,1,2,2,1,3,1]
     return buildScale(tonic, steps)
 
+def melodicMinorAscendingScale(tonic):
+    steps=[2,1,2,2,2,2,1]
+    return buildScale(tonic, steps)
+
+def toString(scale):
+    return "-".join(scale)
+melodicMinorDescendingScale = naturalMinorScale
+
+### Other Modes ###
+def ionian(tonic):
+    return buildScale(tonic, modes()["Ionian"])
+def dorian(tonic):
+    return buildScale(tonic, modes()["Dorian"])
+def phrygian(tonic):
+    return buildScale(tonic, modes()["Phrygian"])
+def lydian(tonic):
+    return buildScale(tonic, modes()["Lydian"])
+def mixolydian(tonic):
+    return buildScale(tonic, modes()["Mixolydian"])
+def aeolian(tonic):
+    return buildScale(tonic, modes()["Aeolian"])
+def locrian(tonic):
+    return buildScale(tonic, modes()["Locrian"])
+
+
 
 #################
 ## Tests
 ################
-class TestMajor(unittest.TestCase):
+class TestScales(unittest.TestCase):
     def setUp(self):
         self.cmaj=["C", "D", "E", "F", "G", "A", "B", "C"]
         self.majSteps=[2,2,1,2,2,2,1]
@@ -94,24 +129,47 @@ class TestMajor(unittest.TestCase):
     def testMajorScales(self):
         print("Major Scales")
         for semitone in self.semitones:
-            print("{}:\t{}".format(
-                semitone, "-".join(majorScale(semitone))))
+            print("{}:\t{}".format(semitone,
+                                   "-".join(majorScale(semitone))))
 
     def testNaturalMinorScales(self):
         print("Natural Minor Scales")
         for semitone in self.semitones:
-            print("{}:\t{}".format(
-                semitone, "-".join(naturalMinorScale(semitone))))
+            print("{}:\t{}".format(semitone,
+                                   "-".join(naturalMinorScale(semitone))))
 
     def testHarmonicMinorScales(self):
         print("Harmonic Minor Scales")
         for semitone in self.semitones:
-            print("{}:\t{}".format(
-                semitone, "-".join(harmonicMinorScale(semitone))))
+            print("{}:\t{}".format(semitone,
+                                   "-".join(harmonicMinorScale(semitone))))
 
-            
+    def testMelodicMinorAsc(self):
+        print("Melodic Ascending Minor Scales")
+        for semitone in self.semitones:
+            print("{}:\t{}".format(semitone,
+                                   "-".join(melodicMinorAscendingScale(semitone))))
+
+    def testMelodicMinorDesc(self):
+        print("Melodic Descending Minor Scales")
+        for semitone in self.semitones:
+            print("{}:\t{}".format(semitone,
+                                   "-".join(melodicMinorDescendingScale(semitone))))
+
+class TestModes(unittest.TestCase):
+    def testModes(self):
+        self.assertEqual(toString(ionian("C")),     "C-D-E-F-G-A-B-C")
+        self.assertEqual(toString(dorian("D")),     "D-E-F-G-A-B-C-D")
+        self.assertEqual(toString(phrygian("E")),   "E-F-G-A-B-C-D-E")
+        self.assertEqual(toString(lydian("F")),     "F-G-A-B-C-D-E-F")
+        self.assertEqual(toString(mixolydian("G")), "G-A-B-C-D-E-F-G")
+        self.assertEqual(toString(aeolian("A")),    "A-B-C-D-E-F-G-A")
+        self.assertEqual(toString(locrian("B")),    "B-C-D-E-F-G-A-B")
+
+    
 def test():
     unittest.main()
 
 if __name__=="__main__":
     test()
+
