@@ -9,17 +9,12 @@ import scales
 class Quality(object):
     Perfect, Major, Minor, Augmented, Diminished = range(5)
 
- 
-
 class Name(object):
     Unison, Second, Third, Fourth, Fifth, Sixth, Seventh, Octave = range(8)
-
 
 class Interval(object):
     def __init__(self, quality, name):
         self.quality, self.name = quality, name
-
- 
 
 def lookup():
     return [
@@ -54,24 +49,15 @@ def lookup():
 def findInterval(quality, name):
     return [i for i in lookup() if i[0]==quality and i[1]==name][0]
 
- 
-
 def perfectUnison(note, scale):
     return note
 
- 
 
 ######################
-
 ### Tests
-
 ######################
-
- 
-
 import unittest
  
-
 class TestIntervals(unittest.TestCase):
 
     def setUp(self):
@@ -85,7 +71,6 @@ class TestIntervals(unittest.TestCase):
         i1=Interval(Quality.Perfect, Name.Unison)
         self.assertEqual(i1.quality, Quality.Perfect)
         self.assertEqual(i1.name, Name.Unison)
-
 
 def test():
     unittest.main()
