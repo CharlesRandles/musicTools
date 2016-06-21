@@ -58,6 +58,12 @@ noteToInt' ((n, notes):ns) note =
 addMod12 :: Int -> Int -> Int
 addMod12 note semitones = (note + semitones) `mod` 12
 
+bareNote :: Note -> Note
+bareNote = take 1
+
+raiseNote :: Note -> Note
+raiseNote n = noteFromNotes (bareNote n) (addNote n 1)
+
 addNote :: Note -> Int -> [Note]
 addNote note semitones = intToNote $ addMod12 (noteToInt note) semitones
 
@@ -80,3 +86,16 @@ scale' notes@(n:ns) (s:ss) = scale' (nextNote:notes) ss
 
 major tonic = scale tonic $ modeFromName "Ionian"
 naturalMinor tonic = scale tonic $ modeFromName "Aeolian"
+
+harmonicMinor tonic = take 6 nm ++ raisedSeventh ++ octave
+              where nm = naturalMinor tonic
+                    raisedSeventh = [raiseNote $ nm !! 6]
+                    octave = drop 7 nm
+
+melodicMinor tonic = take 5 nm ++ [raiseNote $ nm !! 5] ++ [raiseNote $ nm !! 6] ++ (drop 7 nm)
+             where nm = naturalMinor tonic
+
+pprint [] = return ()
+pprint (x:xs) = do
+       putStrLn $ show x
+       pprint xs
