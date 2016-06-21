@@ -9,6 +9,8 @@ import unittest
 class InvalidNoteException(Exception):
     pass
 
+chromaticScale=['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B']
+
 def notes():
     return {0:["C", "B#"],
             1:["C#", "Db"],
@@ -31,9 +33,16 @@ def modes():
              "Mixolydian": [2,2,1,2,2,1,2],
              "Aeolian": [2,1,2,2,1,2,2],
              "Locrian": [1,2,2,1,2,2,2]}
-             
+def allModes():
+    return [mode for mode in modes()]
+
+def allScales(mode):
+    return [buildScale(tonic, mode) for tonic in chromaticScale]
+
 def nextNoteName(note):
     return chr(((ord(note[0]) - ord("A") + 1)%7)+ord("A"))
+
+noteFromName = findIndex
 
 def findIndex(note):
     for key in notes().keys():
@@ -47,8 +56,11 @@ def nextNote(note, step):
         if candidate[0] == noteName[0]:
             return candidate
     raise InvalidNoteException("Unable to raise {} by {} steps.".format(note,step))
-    
-def buildScale(tonic, steps):
+
+
+def buildScale(tonic, mode):
+    if type(mode)==type('Ionian'):
+        mode = modes()[mode]
     scale = [tonic]
     note = tonic
     for step in steps:

@@ -42,12 +42,18 @@ def lookup():
         (Quality.Major, Name.Seventh, 11),
         (Quality.Diminished, Name.Octave, 11),
         (Quality.Perfect, Name.Octave, 12),
-        (Quality.Augmented, Name.Seventh, 10)
+        (Quality.Augmented, Name.Seventh, 12)
         ]
  
 
 def findInterval(quality, name):
     return [i for i in lookup() if i[0]==quality and i[1]==name][0]
+
+def findNames(interval, quality = None):
+    if quality == None:
+        return [i for i in lookup() if i[2] == interval]
+    else:
+        return [i for i in lookup() if i[0]==quality and i[2] == interval]
 
 def perfectUnison(note, scale):
     return note
@@ -71,6 +77,14 @@ class TestIntervals(unittest.TestCase):
         i1=Interval(Quality.Perfect, Name.Unison)
         self.assertEqual(i1.quality, Quality.Perfect)
         self.assertEqual(i1.name, Name.Unison)
+
+    def testIintervalNames(self):
+        names = findNames(0)
+        self.assertEqual(len(names), 2)
+
+    def testIntervalnamesQualified(self):
+        name = findNames(0, Quality.Perfect)
+        self.assertEqual(name[0][0], Name.Unison)
 
 def test():
     unittest.main()
