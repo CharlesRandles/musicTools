@@ -5,6 +5,13 @@ import Data.Maybe (fromJust)
 type Note = String
 noteNames :: [Note]
 noteNames = ["C","D","E","F","G","A","B"]
+modeNames = ["Ionian",
+             "Dorian",
+             "Phrygian",
+             "Lydian",
+             "Mixolydian",
+             "Aeolian",
+             "Locrian"]
 
 chromaticScale :: [Note]
 chromaticScale=["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"]
@@ -55,13 +62,13 @@ addNote :: Note -> Int -> [Note]
 addNote note semitones = intToNote $ addMod12 (noteToInt note) semitones
 
 indexOf :: (Eq a, Show a) => a -> [a] -> Int
-indexOf x [] = error "indexOf: not in list"
+indexOf x [] = error $ "indexOf: not in list:" ++ (show x)
 indexOf x (a:as)
         | x == a = 0
         | otherwise = 1 + (indexOf x as)
 
 nextNoteName :: Note -> Note
-nextNoteName note = noteNames !! (((indexOf note noteNames) + 1) `mod` 7)
+nextNoteName note = noteNames !! (((indexOf (take 1 note) noteNames) + 1) `mod` 7)
 
 noteFromNotes::Note->[Note]->Note
 noteFromNotes note notes = head $ filter (\n -> (head n) == (head note)) notes
@@ -70,3 +77,6 @@ scale tonic mode = reverse $ scale' [tonic] mode
 scale' notes [] = notes
 scale' notes@(n:ns) (s:ss) = scale' (nextNote:notes) ss
        where nextNote = noteFromNotes (nextNoteName n) (addNote n s)
+
+major tonic = scale tonic $ modeFromName "Ionian"
+naturalMinor tonic = scale tonic $ modeFromName "Aeolian"
